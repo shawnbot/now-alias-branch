@@ -38,7 +38,7 @@ getRelevantDeployment(rootDomain).then(deployment => {
   .catch(err => {
     throw new Error(`Unable to alias deployment: "${deployment.uid}" to "${url}": ${error}`)
   })
-  .then(url => {
+  .then(() => {
     Object.assign(data, {
       state: 'success',
       context: STATUS_CONTEXT,
