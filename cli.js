@@ -27,11 +27,12 @@ const rootDomain = url.parse(rootUrl).host
 getRelevantDeployment(rootDomain).then(deployment => {
   const interps = Object.assign({}, deployment, data)
   const url = interpolate(PREVIEW_URL_TEMPLATE, interps)
+  console.warn('alias url:', url)
   return nowFetch(`/v2/now/deployments/${deployment.uid}/aliases`, {
-    method: 'POST',
-    data: {
-      app: 
-      alias: url
+    method: 'post',
+    body: JSON.stringify({alias: url}),
+    headers: {
+      'content-type': 'application/json'
     }
   })
   .catch(err => {
