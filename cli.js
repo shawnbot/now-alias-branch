@@ -1,38 +1,56 @@
 #!/usr/bin/env node
-const octokit = require('@octokit/rest')
+const fs = require('fs')
+const url = require('url')
+const interpolate = require('interpolate')
+const github = require('./src/octokit')
+const getEventData = require('./src/event')
+const getRelevantDeployment = require('./src/now')
 
-const eventPath = process.env.GITHUB_EVENT_PATH || require.resolve('./event.json')
+const {
+  GITHUB_EVENT_PATH,
+  PREVIEW_URL_TEMPLATE,
+  STATUS_CONTEXT,
+  STATUS_DESCRIPTION
+} = process.env
+
+const eventPath = GITHUB_EVENT_PATH || require.resolve('./event.json')
 const event = require(eventPath)
 
-const {after: sha, repository} = event
-const branch = event.ref.split('/').slice(2).join('/')
-const owner = repository.owner.name
-const repo = repository.name
+const {branch, ...data} = getEventData(event)
+data.name = require('./now.json').name
 
-console.log('!', {sha, branch, owner, repo})
+const rootUrl = ROOT_URL || fs.readFileSync('/zeit-now.log', 'utf8').trim()
+const rootDomain = url.parse(rootUrl).host
 
-const github = octokit()
-if (process.env.GITHUB_TOKEN) {
-  github.authenticate({
-    type: 'token',
-    token: process.env.GITHUB_TOKEN
+getRelevantDeployment(rootDomain).then(deployment => {
+  const interps = Object.assign({}, deployment, data)
+  const urlTemplate = PREVIEW_URL_TEMPLATE || '{name}-{branch}'
+  const url = interpolate(urlTemplate, interps)
+  return nowFetch(`/v2/now/deployments/${deployment.uid}/aliases`, {
+    method: 'POST',
+    data: {
+      alias: url
+    }
   })
-}
-
-const payload = {
-}
-
-github.repos.createStatus({
-  owner,
-  repo,
-  sha,
-  state: 'success',
-  context: process.env.STATUS_CONTEXT || 'now/preview',
-  description: process.env.STATUS_DESCRIPTION || 'Your preview is up-to-date',
-  target_url: `https://primer-${branch}.now.sh`
+  .catch(err => {
+    throw new Error(`Unable to alias deployment: "${deployment.uid}" to "${url}": ${error}`)
+  })
+  .then(() => url)
+})
+.then(url => {
+  Object.assign(data, {
+    state: 'success'
+    context: STATUS_CONTEXT || 'now/preview'
+    description: STATUS_DESCRIPTION || 'Your preview is up-to-date',
+    target_url: url
+  })
+  return github.repos.createStatus(data)
+    .catch(error => {
+      throw new Error(`Unable to create status with: ${JSON.stringify(data, null, 2)}: ${error}`)
+    })
 })
 .then(res => {
-  console.log('success!')
+  console.log('SUCCESS!')
 })
 .catch(error => {
   console.error('Error:', error)
