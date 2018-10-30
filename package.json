@@ -1,6 +1,5 @@
 {
-  "name": "now-branch-preview",
-  "version": "0.1.0",
+  "private": true,
   "bin": {
     "now-branch-preview": "cli.js"
   },
