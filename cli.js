@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 const fs = require('fs')
-const url = require('url')
 const interpolate = require('interpolate')
+const url = require('url')
+const {join} = require('path')
 const github = require('./src/octokit')
 const getEventData = require('./src/event')
 const getRelevantDeployment = require('./src/now')
 
 const {
   GITHUB_EVENT_PATH,
-  NOW_APP_NAME = require('./now.json').name,
+  NOW_JSON_PATH = join(process.cwd(), 'now.json'),
+  NOW_APP_NAME = require(NOW_JSON_PATH).name,
   PREVIEW_URL_TEMPLATE = '{app}-{branch}',
   ROOT_URL = fs.readFileSync('/zeit-now.log', 'utf8').trim(),
   STATUS_CONTEXT = 'now/preview',
