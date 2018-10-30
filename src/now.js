@@ -11,5 +11,6 @@ function getRelevantDeployment(host) {
 }
 
 module.exports = {
-  getRelevantDeployment
+  getRelevantDeployment,
+  nowFetch
 }

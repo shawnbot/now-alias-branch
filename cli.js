@@ -4,7 +4,7 @@ const interpolate = require('interpolate')
 const url = require('url')
 const {join} = require('path')
 const github = require('./src/octokit')
-const {getRelevantDeployment} = require('./src/now')
+const {getRelevantDeployment, nowFetch} = require('./src/now')
 
 const {
   GITHUB_EVENT_PATH = require.resolve('./event.json'),
