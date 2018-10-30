@@ -22,8 +22,13 @@ const event = require(GITHUB_EVENT_PATH)
 const rootDomain = url.parse(ROOT_URL).host
 
 getRelevantDeployment(rootDomain).then(deployment => {
+  console.warn('relevant deployment:', deployment)
   const branch = event.ref.split('/').slice(2).join('/')
-  const url = interpolate(PREVIEW_URL_TEMPLATE, {branch, app})
+  const url = interpolate(PREVIEW_URL_TEMPLATE, {
+    branch,
+    app,
+    deployment
+  })
   console.warn('alias url:', url)
   return nowFetch(`/v2/now/deployments/${deployment.uid}/aliases`, {
     method: 'post',
