@@ -1,4 +1,6 @@
-const nowFetch = require('now-fetch')()
+const nowFetch = require('now-fetch')({
+  token: process.env.ZEIT_TOKEN
+})
 
 function getRelevantDeployment(host) {
   return nowFetch('/v2/now/deployments').then(({deployments}) => {
