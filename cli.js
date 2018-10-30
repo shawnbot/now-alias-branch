@@ -12,7 +12,7 @@ const {
   NOW_JSON_PATH = join(process.cwd(), 'now.json'),
   NOW_APP_NAME = require(NOW_JSON_PATH).name,
   PREVIEW_URL_TEMPLATE = '{app}-{branch}',
-  ROOT_URL = fs.readFileSync('/zeit-now.log', 'utf8').trim(),
+  ROOT_URL = fs.readFileSync('/github/workflow/zeit-now.log', 'utf8').trim(),
   STATUS_CONTEXT = 'now/preview',
   STATUS_DESCRIPTION = 'Your preview is up-to-date'
 } = process.env
