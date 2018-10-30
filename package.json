@@ -7,6 +7,7 @@
   "dependencies": {
     "@octokit/rest": "15.15.1",
     "execa": "1.0.0",
+    "interpolate": "0.1.0",
     "now-fetch": "0.1.1"
   }
 }
