@@ -12,7 +12,7 @@ const {
   GITHUB_SHA,
   NOW_JSON_PATH = join(process.cwd(), 'now.json'),
   NOW_APP_NAME: app = require(NOW_JSON_PATH).name,
-  PREVIEW_URL_TEMPLATE = '{app}-{branch}',
+  PREVIEW_URL_TEMPLATE = '{app}-{branch}.now.sh',
   ROOT_URL = fs.readFileSync('/github/workflow/zeit-now.log', 'utf8').trim(),
   STATUS_CONTEXT = 'now/preview',
   STATUS_DESCRIPTION = 'Your preview is up-to-date'
@@ -49,7 +49,7 @@ getRelevantDeployment(rootDomain).then(deployment => {
     console.log('status payload:', payload)
     return github.repos.createStatus(payload)
       .catch(error => {
-        throw new Error(`Unable to create status with payload: ${JSON.stringify(data, null, 2)}: ${error}`)
+        throw new Error(`Unable to create status with payload: ${JSON.stringify(payload, null, 2)}: ${error}`)
       })
   })
 })
