@@ -49,7 +49,7 @@ getRelevantDeployment(rootDomain).then(deployment => {
       state: 'success',
       context: STATUS_CONTEXT,
       description: STATUS_DESCRIPTION,
-      target_url: url
+      target_url: `https://${url}`
     }
     console.log('status payload:', payload)
     return github.repos.createStatus(payload)
