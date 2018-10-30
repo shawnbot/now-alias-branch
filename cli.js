@@ -18,6 +18,7 @@ const {
   STATUS_DESCRIPTION = 'Your preview is up-to-date with {sha}'
 } = process.env
 
+const sha = GITHUB_SHA.substr(0, 7)
 const event = require(GITHUB_EVENT_PATH)
 const rootDomain = url.parse(ROOT_URL).host
 
@@ -27,7 +28,7 @@ getRelevantDeployment(rootDomain).then(deployment => {
   const data = {
     app,
     repo: GITHUB_REPOSITORY,
-    sha: GITHUB_SHA,
+    sha,
     branch,
     uid: deployment.uid
   }
