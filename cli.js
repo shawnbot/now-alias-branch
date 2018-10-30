@@ -21,7 +21,7 @@ const event = require(eventPath)
 const {branch, ...data} = getEventData(event)
 const app = NOW_APP_NAME || require('./now.json').name
 
-const rootUrl = ROOT_URL || 
+const rootUrl = ROOT_URL || fs.readFileSync('/zeit-now.log', 'utf8').trim()
 const rootDomain = url.parse(rootUrl).host
 
 getRelevantDeployment(rootDomain).then(deployment => {
