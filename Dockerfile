@@ -7,5 +7,4 @@ LABEL com.github.actions.color="black"
 
 COPY . "/now-branch-preview"
 WORKDIR "/github/workspace"
-CMD npm install "/now-branch-preview"
-ENTRYPOINT ["npx", "now-branch-preview"]
+ENTRYPOINT ["npx", "-p", "/now-branch-preview", "now-branch-preview"]
