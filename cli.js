@@ -5,7 +5,7 @@ const url = require('url')
 const {join} = require('path')
 const github = require('./src/octokit')
 const getEventData = require('./src/event')
-const getRelevantDeployment = require('./src/now')
+const {getRelevantDeployment} = require('./src/now')
 
 const {
   GITHUB_EVENT_PATH,
