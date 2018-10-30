@@ -36,13 +36,18 @@ getRelevantDeployment(rootDomain).then(deployment => {
     throw new Error(`Unable to alias deployment: "${deployment.uid}" to "${url}": ${error}`)
   })
   .then(() => {
-    Object.assign(data, {
+    const [owner, repo] = GITHUB_REPOSITORY.split('/')
+    const payload = {
+      owner,
+      repo,
+      sha: GITHUB_SHA,
       state: 'success',
       context: STATUS_CONTEXT,
       description: STATUS_DESCRIPTION,
       target_url: url
-    })
-    return github.repos.createStatus(data)
+    }
+    console.log('status payload:', payload)
+    return github.repos.createStatus(payload)
       .catch(error => {
         throw new Error(`Unable to create status with payload: ${JSON.stringify(data, null, 2)}: ${error}`)
       })
